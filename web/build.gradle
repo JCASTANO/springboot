@@ -1,0 +1,38 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'spring-boot'
+apply plugin: 'jacoco'
+
+version = '1.0'
+
+dependencies {
+    compile project(":dominio")
+    compile project(":persistencia")
+    
+    compile project.ext.springstarter
+    
+    testCompile project.ext.junit
+    testCompile project.ext.mockito
+    testCompile project.ext.junitparams
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'web',
+                   'Implementation-Version': version,
+                   'Main-Class': 'co.com.mycompany.web.Application'
+    }
+    from {
+    	configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+  	}
+}
+
+test {
+	jacoco {
+		append = false
+		destinationFile = file("jacoco/jacocoTest.exec")
+	}
+	reports.junitXml.destination =  file("jacoco/test-results")
+	testLogging.showStandardStreams = true
+    testLogging.exceptionFormat = 'full'
+}

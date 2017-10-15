@@ -1,0 +1,30 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'jacoco'
+
+version = '1.0'
+
+dependencies {
+	compile project(":dominio")
+    
+    testCompile project.ext.junit
+    testCompile project.ext.mockito
+    testCompile project.ext.junitparams
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'persistencia',
+                   'Implementation-Version': version
+    }
+}
+
+test {
+	jacoco {
+		append = false
+		destinationFile = file("jacoco/jacocoTest.exec")
+	}
+	reports.junitXml.destination =  file("jacoco/test-results")
+	testLogging.showStandardStreams = true
+    testLogging.exceptionFormat = 'full'
+}
